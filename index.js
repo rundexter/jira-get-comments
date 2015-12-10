@@ -153,43 +153,42 @@ module.exports = {
      */
     run: function(step, dexter) {
 
-        if (step.input('issue').first()) {
-
-            var auth = this.authParams(dexter);
-            var jira = new JiraApi(auth.protocol, auth.host, auth.port, auth.user, auth.password, auth.apiVers);
-
-            var jiraUri = this.issueString(jira, step);
-
-
-            var options = {
-                rejectUnauthorized: jira.strictSSL,
-                uri: jiraUri,
-                method: 'GET',
-                json: true
-            };
-
-            jira.doRequest(options, function(error, response, body) {
-
-                if (error) {
-                    this.fail(error);
-                    return;
-                }
-
-                if (response.statusCode === 400) {
-
-                    this.fail(response.statusCode + ': '.JSON.stringify(body));
-                    return;
-                }
-
-                if (response.statusCode === 200) {
-
-                    this.complete(this.pickResult(response.body, globalPickResults));
-                }
-            }.bind(this));
-
-        } else {
+        if (!step.input('issue').first())  {
 
             this.fail('A [issue] input need for this module.');
+            return;
         }
+
+        var auth = this.authParams(dexter);
+        var jira = new JiraApi(auth.protocol, auth.host, auth.port, auth.user, auth.password, auth.apiVers);
+
+        var jiraUri = this.issueString(jira, step);
+
+
+        var options = {
+            rejectUnauthorized: jira.strictSSL,
+            uri: jiraUri,
+            method: 'GET',
+            json: true
+        };
+
+        jira.doRequest(options, function(error, response, body) {
+
+            if (error) {
+                this.fail(error);
+                return;
+            }
+
+            if (response.statusCode === 400) {
+
+                this.fail(response.statusCode + ': '.JSON.stringify(body));
+                return;
+            }
+
+            if (response.statusCode === 200) {
+
+                this.complete(this.pickResult(response.body, globalPickResults));
+            }
+        }.bind(this));
     }
 };
