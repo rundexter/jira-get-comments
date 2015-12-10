@@ -140,7 +140,7 @@ module.exports = {
         var queryString = '/issue/' + issue + '/comment';
 
         if (step.input('expand').first())
-            queryString.concat('?' + querystring.encode({expand: step.input('expand').first()}));
+            queryString = queryString.concat('?' + querystring.encode({expand: step.input('expand').first()}));
 
         return jira.makeUri(queryString);
     },
