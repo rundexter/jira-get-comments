@@ -48,7 +48,7 @@ module.exports = {
 
             if (_.isUndefined(outputValueByKey)) {
 
-                result = undefined;
+                result = _.isEmpty(result)? undefined : result;
                 return;
             }
 
